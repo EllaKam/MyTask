@@ -10,7 +10,7 @@ namespace PPX_PromotionEngine
     public interface IPromotionManager
     {
         void AddProvider(IPromotionProvider provider);
-        Dictionary<int, double> Process(Dictionary<int, double> items);
+        List<(Item item, double newPrice)> Process(List<Item> items);
 
     }
 }

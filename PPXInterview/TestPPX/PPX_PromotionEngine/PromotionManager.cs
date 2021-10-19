@@ -21,32 +21,32 @@ namespace PPX_PromotionEngine
             providers.Add(provider);
         }
 
-        public Dictionary<int, double> Process(Dictionary<int, double> items)
+        public List<(Item item, double newPrice)> Process(List<Item> items)
         {
+            Dictionary<IPromotionProvider, List<int>> discountListProvider = new Dictionary<IPromotionProvider, List<int>>();
+
             foreach (var provider in providers)
             {
-                var providerDiscount = ProviderEngine(provider, items);
-                foreach (var item in providerDiscount)
+                var itemsDiscount = provider.GetDiscountableItemIds();
+                if (itemsDiscount != null)
                 {
-                    double priceOld = items[item.Key];
-                    items[item.Key] = priceOld - item.Value;
+                    discountListProvider.Add(provider, itemsDiscount);
                 }
             }
-            return items;
-        }
-
-        private Dictionary<int, double> ProviderEngine(IPromotionProvider provider, Dictionary<int, double> items)
-        {
-            Dictionary<int, double> result = new Dictionary<int, double>();
-            var itemsDicount = provider.GetDiscountableItemIds();
-            foreach (int id in itemsDicount)
+            var result = new List<(Item, double)>();
+            foreach (Item item in items)
             {
-                double price = items[id];
-                var discount = provider.GetItemDiscount(id, price);
-                result.Add(id, discount);
+                foreach (var discountProvider in discountListProvider)
+                {
+                    if (discountProvider.Value.Contains(item.Id))
+                    {
+                        double discount = discountProvider.Key.GetItemDiscount(item.Id, item.Price);
+                        item.Price -= discount;
+                    }
+                    result.Add((item, item.Price));
+                }
             }
             return result;
-
         }
 
 

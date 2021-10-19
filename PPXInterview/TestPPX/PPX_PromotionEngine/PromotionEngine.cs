@@ -69,7 +69,7 @@ namespace PPX_PromotionEngine
             return result;
         }
 
-        public Dictionary<int, double> GetDiscountsNew(Dictionary<int, double> items)
+        public List<(Item item, double newPrice)> GetDiscountsNew(List<Item> items)
         {
             return promotionManager.Process(items);
         }

@@ -31,7 +31,7 @@ namespace PPX_PromotionEngine
             }
 
             var promotionEngine = new PromotionEngine();
-            promotionEngine.GetDiscountsNew(itemsPrice);
+            promotionEngine.GetDiscountsNew(items);
             //promotionEngine.GetDiscounts(items);
 
         }
